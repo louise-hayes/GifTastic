@@ -8,7 +8,7 @@
     <title>GifTastic</title>
 
 
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/cssnew.css">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
@@ -98,28 +98,33 @@
             function addNewGame() {
                 // when a game is entered into the add game input field
 
+               
+                    // event.preventDefault() prevents the form from trying to submit itself.
+                    // We're using a form so that the user can hit enter instead of clicking the button if they want
+                    event.preventDefault();
 
-                // event.preventDefault() prevents the form from trying to submit itself.
-                // We're using a form so that the user can hit enter instead of clicking the button if they want
-                event.preventDefault();
+                    // This line will grab the text from the input box
+                    var gameNew = $("#game-input").val().trim();
+                    
+                    // The game from the textbox is then added to our array
+                    if (gameNew && boardGames.indexOf(gameNew) == -1){
+                        boardGames.push(gameNew);
+                    }
+                   
 
-                // This line will grab the text from the input box
-                var gameNew = $("#game-input").val().trim();
-                // The game from the textbox is then added to our array
-
-                if (gameNew) {
-                    boardGames.push(gameNew);
-
+                    $("#game-input").val('');
                     // calling renderButtons which handles the processing of our movie array
+                    init();
+        
 
-                }
-
-                renderButtons();
             };
 
+         
+
+
             function init() {
-                $("game-input").empty();
                 renderButtons();
+
 
                 
 
@@ -132,8 +137,8 @@
 
                     // https: //giphy.com/gifs/board-game-feRrV4zlEf3Ak
 
-                    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-                        gameClicked + "&api_key=dc6zaTOxFJmzC&limit=10";
+                        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                            gameClicked + "&api_key=dc6zaTOxFJmzC&limit=10";
 
                     console.log(queryURL);
 
@@ -152,7 +157,7 @@
                             for (var i = 0; i < results.length; i++) {
                                 //     // Make a div with jQuery
                                 var gameDiv = $("<div>");
-                                gameDiv.attr("class", "gameDivCLass");
+                                gameDiv.attr("class", "divclass");
                                 // p.attr("class", "text-center");
                                 // Set the inner text of the paragraph to the rating of the image in results[i].
                                 // Make an image tag with jQuery and store it in a variable 
@@ -165,15 +170,16 @@
                                 gameImage.attr("data-state", "still");
                                 gameImage.attr("class", "gif");
                                 // gameImage.attr("class", "resize-image center-block");
-
+                             
                                 // Make a paragraph tag with jQuery 
                                 var p = $("<p>").text("Rating: " + results[i].rating);
                                 p.attr("class", "pclass");
+
                                 // Append the p variable to the gameDiv variable.
                                 // gameImage.attr("src", results[i].images.fixed_height.url);
 
                                 // Append the gameImage variable to the gameDiv variable.
-                                gameDiv.append(p, gameImage);
+                                gameDiv.append( p,gameImage);
                                 // gameDiv.append(p);
                                 // Prepend the gameDiv variable to the element with an id of "boardGameDiv".
                                 $("#boardGameDiv").prepend(gameDiv);
@@ -213,10 +219,11 @@
 
 
             }; //end init
-            $("#add-Game").on("click", function (event) {
-
+           
+            $("#add-Game").click(function (event) {
+                
                     addNewGame();
-                });
+            });
 
             init();
         </script>

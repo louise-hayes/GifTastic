@@ -1,0 +1,37 @@
+/* #gameDiv {
+    width:100%;
+} */
+.gif {
+    /* position: relative; */
+border:1px solid black;
+float: left;
+height:150px;
+padding:10px;
+margin: 10px;
+}
+
+ p {
+    /* text-anchor: bottom: ; */
+    float: left;
+    /* vertical-align: bottom; */
+} 
+div.divclass {
+    display: inline-block;
+}
+p.pclass {
+    float:none;
+}
+ /* p{
+    position:absolute;
+    bottom:0;
+    left:0;
+} */
+/* 
+.row {
+    display: table;
+}
+
+.row > div {
+    float: none;
+    display: table-cell;
+} */
