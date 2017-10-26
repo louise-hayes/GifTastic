@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GifTastic</title>
+
+
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="jumbotron">
+                <h2> Louise's GitTastic Giphy App</h2>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-9" id="instructionsDiv">
+
+                <div id="gameButtonsDiv">
+                </div>
+
+            </div>
+            <div class="col-md-3" id="instructionsDiv">
+
+
+                <form id="gameForm">
+                    <label for="game-input">Add a Board Game</label>
+                    <input type="text" id="game-input">
+                    <br>
+                    <input id="add-Game" type="submit" value="Submit">
+                </form>
+            </div>
+
+        </div>
+        <!-- end row-->
+
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+
+                <div id="boardGameDiv">
+                </div>
+
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+        <script type="text/javascript">
+            var boardGames = ["Monopoly", "Connect4", "Operation", "Battleships", "Snakes and Ladders", "Blokus",
+                "Leaping Frogs"
+            ];
+            console.log(boardGames);
+
+            function renderButtons() {
+
+
+                $("#gameButtonsDiv").empty();
+
+                // Building the game buttons from array topics[]
+                for (i = 0; i < boardGames.length; i++) {
+
+                    var r = $('<input/>').attr({
+                        type: "button",
+                        class: "game-button",
+                        value: boardGames[i]
+                    });
+
+                    $("#gameButtonsDiv").prepend(r);
+                } //end for loop to build game buttons
+
+            };
+
+            function addNewGame() {
+                // when a game is entered into the add game input field
+
+                $("#add-Game").on("click", function (event) {
+                    // event.preventDefault() prevents the form from trying to submit itself.
+                    // We're using a form so that the user can hit enter instead of clicking the button if they want
+                    event.preventDefault();
+
+                    // This line will grab the text from the input box
+                    var gameNew = $("#game-input").val().trim();
+                    // The game from the textbox is then added to our array
+                    boardGames.push(gameNew);
+
+                    // calling renderButtons which handles the processing of our movie array
+                    renderButtons();
+                });
+
+            };
+
+            function init() {
+                renderButtons();
+                addNewGame();
+
+                // when a game button is clicked
+                $(".game-button").on("click", function () {
+                    // store the name of the game clicked in var game
+
+                    var gameClicked = $(this).attr("value");
+                    console.log("clicked a button " + gameClicked);
+
+                    https: //giphy.com/gifs/board-game-feRrV4zlEf3Ak
+
+                        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                            gameClicked + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+                    console.log(queryURL);
+
+                    $.ajax({
+                            url: queryURL,
+                            method: "GET"
+                        })
+
+                        // when queryURL comes back we execute this function
+                        .done(function (response) {
+
+                            var results = response.data;
+                            console.log(results);
+                            $("#boardGameDiv").empty();
+
+                            for (var i = 0; i < results.length; i++) {
+                                //     // Make a div with jQuery
+                                var gameDiv = $("<div>");
+                                // p.attr("class", "text-center");
+                                // Set the inner text of the paragraph to the rating of the image in results[i].
+                                // Make an image tag with jQuery and store it in a variable 
+                                var gameImage = $("<img>");
+                                // Set the image's src to results[i]'s fixed_height.url.
+
+                                gameImage.attr("src", results[i].images.fixed_height_small_still.url);
+                                gameImage.attr("data-still", results[i].images.fixed_height_small_still.url);
+                                gameImage.attr("data-animate", results[i].images.original.url);
+                                gameImage.attr("data-state", "still");
+                                gameImage.attr("class", "gif");
+                                // gameImage.attr("class", "resize-image center-block");
+
+                                // Make a paragraph tag with jQuery 
+                                var p = $("<p>").text("Rating: " + results[i].rating);
+
+                                // Append the p variable to the gameDiv variable.
+                                // gameImage.attr("src", results[i].images.fixed_height.url);
+
+                                // Append the gameImage variable to the gameDiv variable.
+                                gameDiv.append(gameImage, p);
+                                // gameDiv.append(p);
+                                // Prepend the gameDiv variable to the element with an id of "boardGameDiv".
+                                $("#boardGameDiv").prepend(gameDiv);
+
+
+                                $(".gif").on("click", function () {
+                                    console.log("clicked");
+                                    var state = $(this).attr("data-state");
+                                    console.log(state);
+
+                                    if (state === "still") {
+
+                                        dataAnimate = $(this).attr("data-animate");
+                                        console.log(dataAnimate);
+
+                                        $(this).attr("src", $(this).attr("data-animate"));
+                                        $(this).attr("data-state", "animate");
+
+
+                                        // console.log ($(this).attr("<img> src=" + data-animate));
+                                    } else {
+                                        $(this).attr("src", $(this).attr("data-still"));
+                                        $(this).attr("data-state", "still");
+                                    }
+
+
+                                });
+
+
+
+
+                            } //end for loop
+
+                        }); //end .done
+
+                }); //end on click
+
+
+            }; //end init
+
+
+            init();
+        </script>
+
+    </div>
+    <!-- End Container -->
+
+</body>
+
+</html>
