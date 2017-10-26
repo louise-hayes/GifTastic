@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GifTastic</title>
 
-
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -24,16 +23,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
+    <container class="col-md-12">
+
+        <div id="headerPanel" class="col-md-12">
             <div class="jumbotron">
-                <h2> Louise's GitTastic Giphy App</h2>
+                <h2> Louise's GifTastic Giphy App</h2>
             </div>
         </div>
-
 
         <div class="row">
             <div class="col-md-9" id="instructionsDiv">
@@ -55,8 +56,6 @@
 
         </div>
         <!-- end row-->
-
-
         <div class="row">
             <div class="col-md-12 text-center">
 
@@ -64,165 +63,13 @@
                 </div>
 
             </div>
+
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+        <!-- End Container -->
+        <script type="text/javascript" src="assets/javascript/logic.js"></script>
 
-        <script type="text/javascript">
-            var boardGames = ["Monopoly", "Connect4", "Operation", "Battleships", "Snakes and Ladders", "Blokus",
-                "Leaping Frogs"
-            ];
-            console.log(boardGames);
-
-            function renderButtons() {
-
-
-                $("#gameButtonsDiv").empty();
-
-                // Building the game buttons from boardGames[]
-                for (i = 0; i < boardGames.length; i++) {
-
-                    var r = $('<input/>').attr({
-                        type: "button",
-                        class: "game-button",
-                        value: boardGames[i]
-                    });
-
-                    $("#gameButtonsDiv").append(r);
-
-                } //end for loop to build game buttons
-
-
-            };
-
-            function addNewGame() {
-                // when a game is entered into the add game input field
-
-
-                // event.preventDefault() prevents the form from trying to submit itself.
-                // We're using a form so that the user can hit enter instead of clicking the button if they want
-                event.preventDefault();
-
-                // This line will grab the text from the input box
-                var gameNew = $("#game-input").val().trim();
-                // The game from the textbox is then added to our array
-
-                if (gameNew) {
-                    boardGames.push(gameNew);
-
-                    // calling renderButtons which handles the processing of our movie array
-
-                }
-
-                renderButtons();
-            };
-
-            function init() {
-                $("game-input").empty();
-                renderButtons();
-
-                
-
-                // when a game button is clicked
-                $(".game-button").on("click", function () {
-                    // store the name of the game clicked in var game
-
-                    var gameClicked = $(this).attr("value");
-                    console.log("clicked a button " + gameClicked);
-
-                    // https: //giphy.com/gifs/board-game-feRrV4zlEf3Ak
-
-                    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-                        gameClicked + "&api_key=dc6zaTOxFJmzC&limit=10";
-
-                    console.log(queryURL);
-
-                    $.ajax({
-                            url: queryURL,
-                            method: "GET"
-                        })
-
-                        // when queryURL comes back we execute this function
-                        .done(function (response) {
-
-                            var results = response.data;
-                            console.log(results);
-                            $("#boardGameDiv").empty();
-
-                            for (var i = 0; i < results.length; i++) {
-                                //     // Make a div with jQuery
-                                var gameDiv = $("<div>");
-                                gameDiv.attr("class", "gameDivCLass");
-                                // p.attr("class", "text-center");
-                                // Set the inner text of the paragraph to the rating of the image in results[i].
-                                // Make an image tag with jQuery and store it in a variable 
-                                var gameImage = $("<img>");
-                                // Set the image's src to results[i]'s fixed_height.url.
-
-                                gameImage.attr("src", results[i].images.fixed_height_small_still.url);
-                                gameImage.attr("data-still", results[i].images.fixed_height_small_still.url);
-                                gameImage.attr("data-animate", results[i].images.original.url);
-                                gameImage.attr("data-state", "still");
-                                gameImage.attr("class", "gif");
-                                // gameImage.attr("class", "resize-image center-block");
-
-                                // Make a paragraph tag with jQuery 
-                                var p = $("<p>").text("Rating: " + results[i].rating);
-                                p.attr("class", "pclass");
-                                // Append the p variable to the gameDiv variable.
-                                // gameImage.attr("src", results[i].images.fixed_height.url);
-
-                                // Append the gameImage variable to the gameDiv variable.
-                                gameDiv.append(p, gameImage);
-                                // gameDiv.append(p);
-                                // Prepend the gameDiv variable to the element with an id of "boardGameDiv".
-                                $("#boardGameDiv").prepend(gameDiv);
-
-
-                                $(".gif").on("click", function () {
-                                    console.log("clicked");
-                                    var state = $(this).attr("data-state");
-                                    console.log(state);
-
-                                    if (state === "still") {
-
-                                        dataAnimate = $(this).attr("data-animate");
-                                        console.log(dataAnimate);
-
-                                        $(this).attr("src", $(this).attr("data-animate"));
-                                        $(this).attr("data-state", "animate");
-
-
-                                        // console.log ($(this).attr("<img> src=" + data-animate));
-                                    } else {
-                                        $(this).attr("src", $(this).attr("data-still"));
-                                        $(this).attr("data-state", "still");
-                                    }
-
-
-                                });
-
-
-
-
-                            } //end for loop
-
-                        }); //end .done
-
-                }); //end on click
-
-
-            }; //end init
-            $("#add-Game").on("click", function (event) {
-
-                    addNewGame();
-                });
-
-            init();
-        </script>
-
-    </div>
-    <!-- End Container -->
+    </container>
 
 </body>
 
